@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 from __future__ import print_function
 
 __author__ = 'huzecong'
@@ -10,11 +10,9 @@ import hashlib
 import math
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
-
-from PIL import Image
-import pytesseract
 
 
 class Logging:
@@ -39,7 +37,7 @@ if __name__ != '__main__':
 
 parser = argparse.ArgumentParser(description='Find your memes when you want them.')
 subparsers = parser.add_subparsers(metavar='command', dest='command', help='Valid commands are:')
-parser.add_argument('-v', '--version', action='version', version='meme (version %s)' % __version__)
+parser.add_argument('-v', '--version', action='version', version='memes (version %s)' % __version__)
 
 parser_add = subparsers.add_parser('add', help='Add meme (or folder of memes) to database',
                                    description='Add selected memes to database. Memes will be scanned for text using Tesseract OCR. You can also specify indexing keywords for single memes.')
@@ -99,17 +97,19 @@ class Meme:
 
     def match(self, keywords):
         if not hasattr(self, 'index'):
-            self.max_length = max(len(phrase) for phrase in self.phrases)
+            max_length = max(len(phrase) for phrase in self.phrases)
             self.index = [set() for x in range(max_length + 1)]
-            for phrase in phrases:
+            for phrase in self.phrases:
                 length = len(phrase)
                 for l in range(1, length):
                     for st in range(length - l):
-                        self.index[l].insert(phrase[st:(st + l)])
+                        self.index[l].add(phrase[st:(st + l)])
         
         max_score = sum(len(keyword) ** 2 for keyword in keywords)
         score = sum(self._match_keyword(keyword) for keyword in keywords)
-        return 1.0 / -math.log(float(score) / max_score)
+        if score != 0: # normalize score
+            score = 1.0 / (1 - math.log(float(score) / max_score))
+        return score
 
 
 
@@ -127,7 +127,7 @@ def load_database(filename):
     try:
         f = open(filename, 'r')
         n_memes = int(f.next())
-        memes = []
+        memes = {}
         for i in range(n_memes):
             line = f.next()
             meme_id = int(line.split()[0])
@@ -136,7 +136,7 @@ def load_database(filename):
             if meme_filename == '':
                 raise ValueError('File name is empty')
             meme_phrases = [phrase.decode('utf-8') for phrase in f.next().strip().split('|')]
-            memes.append(Meme(meme_id, meme_hash, meme_filename, meme_phrases))
+            memes[meme_id] = Meme(meme_id, meme_hash, meme_filename, meme_phrases)
         return memes
     except:
         Logging.error('Failed to open database: database may be corrupt')
@@ -147,7 +147,7 @@ def save_database(filename, database):
     temp = tempfile.NamedTemporaryFile()
     try:
         f.write(str(len(database)) + '\n')
-        for meme in database:
+        for meme in database.values():
             f.write(' '.join([str(meme.id), meme.hash, meme.filename]) + '\n')
             f.write(u'|'.join(meme.phrases).encode('utf-8') + '\n')
     except:
@@ -161,6 +161,9 @@ def save_database(filename, database):
 
 
 if args.command == 'add':
+    from PIL import Image
+    import pytesseract
+
     try:
         args.format = ['.' + ext.lower() for ext in args.format.split(',')]
     except:
@@ -175,6 +178,7 @@ if args.command == 'add':
             f.write('0\n')
 
     database = load_database(database_path)
+    db_size = len(database)
     hashes = {meme.hash: meme.id for meme in database}
 
 
@@ -210,8 +214,8 @@ if args.command == 'add':
         return phrase
 
     meme_count = 0
-    for file_path in files:
-        cur_id = len(database)
+    for file_path in sorted(files):
+        cur_id = db_size + meme_count
         new_filename = str(cur_id) + os.path.splitext(file_path)[-1]
         new_path = os.path.join(meme_path, new_filename)
         shutil.copy(file_path, new_path)
@@ -240,7 +244,7 @@ if args.command == 'add':
             Logging.warning("Meme from file '%s' does not contain recognizable text, skipping" % file_path)
             continue
 
-        database.append(Meme(cur_id, meme_hash, new_filename, phrases))
+        database[cur_id] = Meme(cur_id, meme_hash, new_filename, phrases)
         hashes[meme_hash] = cur_id
         meme_count += 1
         if args.verbose:
@@ -255,9 +259,26 @@ elif args.command == 'search':
     if not os.path.exists(meme_path):
         Logging.error("There are no memes in the databse yet.")
 
+    Logging.info("Search keywords: " + ' | '.join(args.keywords))
+    keywords = [keyword.decode('utf-8').strip() for keyword in args.keywords]
+
     database = load_database(database_path)
-    scores = [(score, meme_id)]
-    for meme in database:pass
+    n_cand = int(args.candidates)
+    scores = [(meme.match(keywords), meme.id) for meme in database.values()]
+    scores = filter(lambda (s, _): s > 0, sorted(scores, key=lambda (s, _): s, reverse=True)[:n_cand])
+
+    if len(scores) == 0:
+        Logging.info("No matching memes found")
+        sys.exit(0)
+    
+    file_paths = [os.path.join(meme_path, database[meme_id].filename) for _, meme_id in scores]
+    if args.dry_run:
+        if args.hfs_paths:
+            file_paths = ['Macintosh HD' + path.replace('/', ':') for path in file_paths]
+        print('\n'.join(file_paths))
+        sys.exit(0)
+    else:
+        subprocess.call(['qlmanage', '-p'] + file_paths)
 
 else:
     "Command '%s' is not supported yet." % args.command
