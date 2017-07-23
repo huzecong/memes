@@ -157,8 +157,6 @@ def save_database(filename, database):
         shutil.move(temp_path, filename)
     except:
         Logging.error('Failed to save database: cannot write to file')
-    finally:
-        os.remove(temp_path)
 
 
 if args.command == 'add':
