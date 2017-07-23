@@ -15,7 +15,7 @@ To use *Memes*, you need to have Tesseract installed, and download Chinese langu
 ```bash
 brew install tesseract
 wget -O $(brew --prefix tesseract)/share/tessdata/chi_sim.traineddata https://github.com/tesseract-ocr/tessdata/raw/master/chi_sim.traineddata
-pip install pytesseract PIL
+pip install pytesseract Pillow
 ```
 
 Clone the repository, and you'll have *Memes* ready. The `meme.py` file is the command line tool, while `Get Memes.workflow` is the macOS Service. `Get Memes.scpt` contains the AppleScript used in the workflow. Although the *Memes* command line tool could be run anywhere, but to use the macOS Service, you need to link it into your PATH.

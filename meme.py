@@ -143,7 +143,8 @@ def load_database(filename):
 
 
 def save_database(filename, database):
-    f, temp_path = tempfile.mkstemp()
+    _, temp_path = tempfile.mkstemp()
+    f = open(temp_path, 'w')
     temp = tempfile.NamedTemporaryFile()
     try:
         f.write(str(len(database)) + '\n')
@@ -179,7 +180,7 @@ if args.command == 'add':
 
     database = load_database(database_path)
     db_size = len(database)
-    hashes = {meme.hash: meme.id for meme in database}
+    hashes = {meme.hash: meme.id for meme in database.values()}
 
 
     if os.path.isfile(args.path):
