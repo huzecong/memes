@@ -24,7 +24,7 @@ Clone the repository, and you'll have *Memes* ready. The `meme.py` file is the c
 git clone https://github.com/huzecong/memes.git
 python meme.py --help         # use the command line tool
 
-ln -s $(pwd)/meme.py $(brew --prefix)/bin/meme  # make a soft link in your executables directory
+ln -s $(pwd)/meme.py /usr/local/bin/meme  # make a soft link in your executables directory
 open "Get Memes.workflow"     # install the macOS Service, or just simply double-click the file
 ```
 
