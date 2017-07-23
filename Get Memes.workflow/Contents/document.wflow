@@ -159,7 +159,7 @@ end run</string>
 				<key>ActionParameters</key>
 				<dict>
 					<key>source</key>
-					<string>on run {input, parameters}	set candidateMemes to input		-- Copy found memes into given folder	set tmpFolder to (path to home folder as string) &amp; "Library:Application Support:"	set memeFolderName to "Candidate Memes"	set memeFolder to alias (tmpFolder &amp; memeFolderName)		tell application "Finder" to try		delete memeFolder		make new folder at alias tmpFolder with properties {name:memeFolderName}	end try	set counter to 0	tell application "Finder" to repeat with memeFile in candidateMemes		tell application "System Events" to set extension to name extension of file memeFile		set targetName to ("meme_" &amp; (counter as string) &amp; "." &amp; extension)		duplicate file memeFile to memeFolder with replacing		set name of the result to targetName		set counter to counter + 1	end repeat		-- Prompt the user to select a meme	choose file default location alias (memeFolder &amp; (item 2 of (list folder memeFolder)) as string)	set chosenMeme to the result		return chosenMemeend run</string>
+					<string>on run {input, parameters}	set candidateMemes to input		-- Copy found memes into given folder	set tmpFolder to (path to home folder as string) &amp; "Library:Application Support:"	set memeFolderName to "Candidate Memes"		tell application "Finder" to try		set memeFolder to alias (tmpFolder &amp; memeFolderName)		delete memeFolder	end try	tell application "Finder" to try		make new folder at alias tmpFolder with properties {name:memeFolderName}	end try	set memeFolder to alias (tmpFolder &amp; memeFolderName)	set counter to 0	tell application "Finder" to repeat with memeFile in candidateMemes		tell application "System Events" to set extension to name extension of file memeFile		set targetName to ("meme_" &amp; (counter as string) &amp; "." &amp; extension)		duplicate file memeFile to memeFolder with replacing		set name of the result to targetName		set counter to counter + 1	end repeat		-- Prompt the user to select a meme	choose file default location alias (memeFolder &amp; (item 1 of (list folder memeFolder)) as string)	set chosenMeme to the result		return chosenMemeend run</string>
 				</dict>
 				<key>BundleIdentifier</key>
 				<string>com.apple.Automator.RunScript</string>
@@ -327,19 +327,19 @@ end run</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>C9872422-2B8F-4685-9FDD-178D4FCAD89C</key>
-		<dict>
-			<key>from</key>
-			<string>9FACAB4A-9F75-478A-816E-58888C202FD9 - 9FACAB4A-9F75-478A-816E-58888C202FD9</string>
-			<key>to</key>
-			<string>F4870385-8438-42F2-822A-BB08A0ECFC8C - F4870385-8438-42F2-822A-BB08A0ECFC8C</string>
-		</dict>
-		<key>D8065D5B-26A7-49B1-A0EE-12BD0EE4C70A</key>
+		<key>14C30063-FD10-46FF-BC6B-BD9BD24C2CE3</key>
 		<dict>
 			<key>from</key>
 			<string>F4870385-8438-42F2-822A-BB08A0ECFC8C - F4870385-8438-42F2-822A-BB08A0ECFC8C</string>
 			<key>to</key>
 			<string>5C7DC712-AA16-4EF7-8A50-632147103D2A - 5C7DC712-AA16-4EF7-8A50-632147103D2A</string>
+		</dict>
+		<key>B0CD03C4-B97C-4A9D-ACCC-2FA4D4AA780A</key>
+		<dict>
+			<key>from</key>
+			<string>9FACAB4A-9F75-478A-816E-58888C202FD9 - 9FACAB4A-9F75-478A-816E-58888C202FD9</string>
+			<key>to</key>
+			<string>F4870385-8438-42F2-822A-BB08A0ECFC8C - F4870385-8438-42F2-822A-BB08A0ECFC8C</string>
 		</dict>
 	</dict>
 	<key>workflowMetaData</key>
