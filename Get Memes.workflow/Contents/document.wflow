@@ -53,7 +53,7 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>source</key>
-					<string>on run {input, parameters}	set input to item 1 of input	set command to "memes search --hfs-paths --dry-run -c 5 " &amp; quoted form of input	do shell script command	set candidateMemes to every paragraph of the result		if candidateMemes is {} then		display dialog "Error: No matching memes for keywords " &amp; quoted form of input		error number -128	end if		return candidateMemesend run</string>
+					<string>on run {input, parameters}	set input to item 1 of input	set command to "meme search --hfs-paths --dry-run -c 5 " &amp; quoted form of input	do shell script command	set candidateMemes to every paragraph of the result		if candidateMemes is {} then		display dialog "Error: No matching memes for keywords " &amp; quoted form of input		error number -128	end if		return candidateMemesend run</string>
 				</dict>
 				<key>BundleIdentifier</key>
 				<string>com.apple.Automator.RunScript</string>
@@ -109,7 +109,7 @@ end run</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>309.000000:316.000000</string>
+				<string>309.000000:418.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -213,7 +213,7 @@ end run</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>309.000000:562.000000</string>
+				<string>309.000000:990.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -317,7 +317,7 @@ end run</string>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>309.000000:808.000000</string>
+				<string>309.000000:1445.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/Base.lproj/main.nib</string>
 			</dict>
@@ -327,19 +327,19 @@ end run</string>
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>41C3755D-4075-4078-94CA-4E75CC41F50F</key>
-		<dict>
-			<key>from</key>
-			<string>F4870385-8438-42F2-822A-BB08A0ECFC8C - F4870385-8438-42F2-822A-BB08A0ECFC8C</string>
-			<key>to</key>
-			<string>5C7DC712-AA16-4EF7-8A50-632147103D2A - 5C7DC712-AA16-4EF7-8A50-632147103D2A</string>
-		</dict>
-		<key>48002C29-C161-42AB-A7D9-9C33BDC20176</key>
+		<key>45CC9408-E77C-4B2E-86A6-B349ED9099FF</key>
 		<dict>
 			<key>from</key>
 			<string>9FACAB4A-9F75-478A-816E-58888C202FD9 - 9FACAB4A-9F75-478A-816E-58888C202FD9</string>
 			<key>to</key>
 			<string>F4870385-8438-42F2-822A-BB08A0ECFC8C - F4870385-8438-42F2-822A-BB08A0ECFC8C</string>
+		</dict>
+		<key>D8A4FD62-6BC7-4ADC-A610-E9099EDD1FD2</key>
+		<dict>
+			<key>from</key>
+			<string>F4870385-8438-42F2-822A-BB08A0ECFC8C - F4870385-8438-42F2-822A-BB08A0ECFC8C</string>
+			<key>to</key>
+			<string>5C7DC712-AA16-4EF7-8A50-632147103D2A - 5C7DC712-AA16-4EF7-8A50-632147103D2A</string>
 		</dict>
 	</dict>
 	<key>workflowMetaData</key>
